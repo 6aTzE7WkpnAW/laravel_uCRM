@@ -225,7 +225,21 @@ return [
         'postal_code' => '郵便番号',
         'zip_code' => '郵便番号',
         'contact' => 'お問い合わせ内容',
-        'caution' => '同意'
+        'caution' => '同意',
+        'price' => '価格',
+        'is_selling' => '販売中',
+        'memo' => 'メモ',
+        'image' => '画像',
+        'file' => 'ファイル',
+        'terms' => '利用規約',
+        'agreement' => '同意',
+        'captcha' => 'キャプチャ',
+        'recaptcha' => 'reCAPTCHA',
+        'token' => 'トークン',
+        'code' => 'コード',
+        'verification_code' => '認証コード',
+        'otp' => 'ワンタイムパスワード',
+        'remember' => 'ログイン状態を保持',
     ],
 
 ];
