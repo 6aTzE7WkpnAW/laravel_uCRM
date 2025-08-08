@@ -5,25 +5,18 @@
                 {{ label }}
                 <span v-if="required" class="text-red-500 ml-1">*</span>
             </label>
-            
+
             <!-- ラジオボタンスタイル -->
             <div v-if="variant === 'radio'" :class="containerClass">
                 <div v-for="option in options" :key="option.value" class="flex items-center">
-                    <input 
-                        type="radio" 
-                        :id="uniqueName + '_' + option.value"
-                        :name="uniqueName"
-                        :value="option.value"
-                        :checked="modelValue === option.value"
-                        :disabled="disabled || option.disabled"
+                    <input type="radio" :id="uniqueName + '_' + option.value" :name="uniqueName" :value="option.value"
+                        :checked="modelValue === option.value" :disabled="disabled || readonly || option.disabled"
                         @change="updateValue(option.value)"
-                        class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 focus:ring-indigo-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                    <label 
-                        :for="uniqueName + '_' + option.value"
-                        class="ml-2 text-sm font-medium text-gray-900 cursor-pointer"
-                        :class="{ 'opacity-50 cursor-not-allowed': disabled || option.disabled }"
-                    >
+                        class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 focus:ring-indigo-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <label :for="uniqueName + '_' + option.value" class="ml-2 text-sm font-medium text-gray-900" :class="{
+                        'opacity-50 cursor-not-allowed': disabled || option.disabled,
+                        'cursor-default': readonly && !disabled
+                    }">
                         {{ option.label }}
                     </label>
                 </div>
@@ -31,58 +24,39 @@
 
             <!-- ボタンスタイル -->
             <div v-else-if="variant === 'button'" :class="containerClass">
-                <label 
-                    v-for="option in options" 
-                    :key="option.value"
+                <label v-for="option in options" :key="option.value"
                     class="flex items-center cursor-pointer bg-white border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 transition-colors"
                     :class="{
                         'bg-indigo-50 border-indigo-500': modelValue === option.value,
                         'opacity-50 cursor-not-allowed hover:bg-white': disabled || option.disabled
-                    }"
-                >
-                    <input 
-                        type="radio" 
-                        :name="uniqueName"
-                        :value="option.value"
-                        :checked="modelValue === option.value"
-                        :disabled="disabled || option.disabled"
-                        @change="updateValue(option.value)"
-                        class="sr-only"
-                    >
+                    }">
+                    <input type="radio" :name="uniqueName" :value="option.value" :checked="modelValue === option.value"
+                        :disabled="disabled || option.disabled" @change="updateValue(option.value)" class="sr-only">
                     <span class="text-sm font-medium text-gray-900">{{ option.label }}</span>
                 </label>
             </div>
 
             <!-- カードスタイル -->
             <div v-else-if="variant === 'card'" :class="containerClass">
-                <label 
-                    v-for="option in options" 
-                    :key="option.value"
+                <label v-for="option in options" :key="option.value"
                     class="block cursor-pointer bg-white border border-gray-300 rounded-lg p-4 hover:bg-gray-50 transition-all"
                     :class="{
                         'ring-2 ring-indigo-500 border-indigo-500 bg-indigo-50': modelValue === option.value,
                         'opacity-50 cursor-not-allowed hover:bg-white': disabled || option.disabled
-                    }"
-                >
-                    <input 
-                        type="radio" 
-                        :name="uniqueName"
-                        :value="option.value"
-                        :checked="modelValue === option.value"
-                        :disabled="disabled || option.disabled"
-                        @change="updateValue(option.value)"
-                        class="sr-only"
-                    >
+                    }">
+                    <input type="radio" :name="uniqueName" :value="option.value" :checked="modelValue === option.value"
+                        :disabled="disabled || option.disabled" @change="updateValue(option.value)" class="sr-only">
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full flex items-center justify-center"
-                                 :class="{ 'border-indigo-500 bg-indigo-500': modelValue === option.value }">
+                                :class="{ 'border-indigo-500 bg-indigo-500': modelValue === option.value }">
                                 <div v-if="modelValue === option.value" class="w-2 h-2 bg-white rounded-full"></div>
                             </div>
                         </div>
                         <div class="ml-3">
                             <div class="text-sm font-medium text-gray-900">{{ option.label }}</div>
-                            <div v-if="option.description" class="text-sm text-gray-500 mt-1">{{ option.description }}</div>
+                            <div v-if="option.description" class="text-sm text-gray-500 mt-1">{{ option.description }}
+                            </div>
                         </div>
                     </div>
                 </label>
@@ -92,7 +66,7 @@
             <div v-if="error" class="mt-1 text-sm text-red-600">
                 {{ error }}
             </div>
-            
+
             <!-- ヘルプテキスト -->
             <div v-if="help" class="mt-1 text-sm text-gray-500">
                 {{ help }}
@@ -121,9 +95,9 @@ const props = defineProps({
         type: Array,
         required: true,
         validator: (options) => {
-            return options.every(option => 
-                typeof option === 'object' && 
-                option.hasOwnProperty('value') && 
+            return options.every(option =>
+                typeof option === 'object' &&
+                option.hasOwnProperty('value') &&
                 option.hasOwnProperty('label')
             )
         }
@@ -146,6 +120,10 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    readonly: {
+        type: Boolean,
+        default: false
+    },
     error: {
         type: String,
         default: ''
@@ -163,15 +141,15 @@ const containerClass = computed(() => {
         horizontal: 'flex flex-wrap gap-6',
         vertical: 'space-y-3'
     }
-    
+
     if (props.variant === 'button') {
         return props.layout === 'vertical' ? 'space-y-3' : 'flex flex-wrap gap-3'
     }
-    
+
     if (props.variant === 'card') {
         return props.layout === 'vertical' ? 'space-y-4' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
     }
-    
+
     return baseClasses[props.layout] || baseClasses.horizontal
 })
 
@@ -180,8 +158,8 @@ const uniqueName = computed(() => {
 })
 
 const updateValue = (value) => {
-    if (props.disabled) return
-    
+    if (props.disabled || props.readonly) return
+
     emit('update:modelValue', value)
     emit('change', value)
 }

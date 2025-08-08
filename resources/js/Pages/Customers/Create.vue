@@ -4,7 +4,8 @@ import { Head } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 import { router } from '@inertiajs/vue3';
 import ValidationErrors from '@/Components/ValidationErrors.vue';
-import RadioButtonGroup from '@/Components/RadioButtonGroup.vue'; // 汎用ラジオボタンコンポーネント
+import RadioButtonGroup from '@/Components/RadioButtonGroup.vue';
+import { Core } from 'yubinbango-core2';
 
 defineProps({
     errors: Object,
@@ -22,6 +23,25 @@ const form = reactive({
     memo: '',
 })
 
+// yubinbango-core2を使用した住所取得
+const fetchAddress = () => {
+    if (!form.postcode || form.postcode.length !== 7) {
+        return;
+    }
+    
+    try {
+        // yubinbango-core2の正しい使用方法
+        new Core(form.postcode, (addr) => {
+            if (addr) {
+                // region=都道府県, locality=市区町村, street=町域
+                form.address = addr.region + addr.locality + addr.street;
+            }
+        });
+    } catch (error) {
+        console.error('住所取得エラー:', error);
+    }
+}
+
 // 性別の選択肢
 const genderOptions = [
     { value: '0', label: '男性' },
@@ -35,7 +55,6 @@ const storeCustomerRequests = () => {
 </script>
 
 <template>
-
     <Head title="顧客登録" />
 
     <AuthenticatedLayout>
@@ -95,8 +114,8 @@ const storeCustomerRequests = () => {
                                                 <div class="relative">
                                                     <label for="postcode"
                                                         class="leading-7 text-sm text-gray-600">郵便番号</label>
-                                                    <input type="number" id="postcode" name="postcode"
-                                                        v-model="form.postcode"
+                                                    <input type="text" id="postcode" name="postcode" @input="fetchAddress"
+                                                        v-model="form.postcode" placeholder="1234567" maxlength="7"
                                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                 </div>
                                             </div>

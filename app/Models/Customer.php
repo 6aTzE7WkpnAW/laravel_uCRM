@@ -15,7 +15,7 @@ class Customer extends Model
         'kana',
         'tel',
         'email',
-        'postcpde',
+        'postcode',
         'address',
         'birthday',
         'gender',
