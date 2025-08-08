@@ -21,7 +21,7 @@ const showingNavigationDropdown = ref(false);
                             <!-- Logo -->
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
-                                <ApplicationLogo class="block w-16 fill-current text-gray-800" />
+                                    <ApplicationLogo class="block w-16 fill-current text-gray-800" />
                                 </Link>
                             </div>
 
@@ -32,6 +32,9 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
                                 <NavLink :href="route('items.index')" :active="route().current('items.index')">
                                     商品管理
+                                </NavLink>
+                                <NavLink :href="route('customers.index')" :active="route().current('customers.index')">
+                                    顧客管理
                                 </NavLink>
                             </div>
                         </div>
@@ -70,22 +73,17 @@ const showingNavigationDropdown = ref(false);
 
                         <!-- Hamburger -->
                         <div class="-me-2 flex items-center sm:hidden">
-                            <button @click="
-                                showingNavigationDropdown =
-                                !showingNavigationDropdown
-                                "
+                            <button @click="showingNavigationDropdown = !showingNavigationDropdown"
                                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none">
                                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <path :class="{
                                         hidden: showingNavigationDropdown,
-                                        'inline-flex':
-                                            !showingNavigationDropdown,
+                                        'inline-flex': !showingNavigationDropdown,
                                     }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 6h16M4 12h16M4 18h16" />
                                     <path :class="{
                                         hidden: !showingNavigationDropdown,
-                                        'inline-flex':
-                                            showingNavigationDropdown,
+                                        'inline-flex': showingNavigationDropdown,
                                     }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M6 18L18 6M6 6l12 12" />
                                 </svg>
@@ -105,6 +103,9 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('items.index')" :active="route().current('items.index')">
                             商品管理
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('customers.index')" :active="route().current('customers.index')">
+                            顧客管理
                         </ResponsiveNavLink>
                     </div>
 

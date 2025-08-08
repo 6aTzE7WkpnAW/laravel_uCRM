@@ -164,6 +164,9 @@ return [
     'url' => ':attributeには有効なURLを指定してください。',
     'ulid' => ':attributeには有効なULIDを指定してください。',
     'uuid' => ':attributeには有効なUUIDを指定してください。',
+    'valid_json' => ':attributeには有効なJSON文字列を指定してください。',
+    'valid_date' => ':attributeには有効な日付を指定してください。',
+    'valid_time' => ':attributeには有効な時間を指定してください。',
 
     /*
     |--------------------------------------------------------------------------
@@ -195,6 +198,12 @@ return [
 
     'attributes' => [
         'name' => '名前',
+        'kana' => 'カナ',
+        'tel' => '電話番号',
+        'email' => 'メールアドレス',
+        'postcpde' => '郵便番号',
+        'address' => '住所',
+        'birthday' => '誕生日',
         'username' => 'ユーザー名',
         'email' => 'メールアドレス',
         'password' => 'パスワード',
@@ -240,6 +249,7 @@ return [
         'verification_code' => '認証コード',
         'otp' => 'ワンタイムパスワード',
         'remember' => 'ログイン状態を保持',
+
     ],
 
 ];

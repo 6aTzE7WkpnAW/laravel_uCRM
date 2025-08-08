@@ -84,12 +84,17 @@ const deleteItem = (id) => {
                                             </div>
                                         </div>
 
-                                        <div class="p-2 w-full mt-6">
+                                       <div class="p-2 w-full mt-6">
                                             <div class="flex gap-4 justify-center">
                                                 <Link 
                                                     :href="route('items.edit', { item: item.id })"
                                                     class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
                                                     編集
+                                                </Link>
+                                                <Link 
+                                                    :href="route('items.index')"
+                                                    class="text-gray-700 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded text-lg">
+                                                    一覧に戻る
                                                 </Link>
                                                 <button 
                                                     @click="deleteItem(item.id)"
