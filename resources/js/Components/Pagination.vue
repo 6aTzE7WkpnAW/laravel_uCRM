@@ -1,6 +1,4 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
-
 const props = defineProps({
     pagination: Object, // Laravelのpaginationオブジェクト
     preserveSearch: {
@@ -8,6 +6,8 @@ const props = defineProps({
         default: true
     }
 });
+
+const emit = defineEmits(['page-change'])
 
 // ページネーション範囲を取得
 const getPaginationRange = (pagination) => {
@@ -38,6 +38,15 @@ const getPageUrl = (pagination, page) => {
     return url.pathname + url.search;
 };
 
+// ページクリック処理
+const handlePageClick = (url) => {
+    emit('page-change', url)
+}
+
+const handlePageNumber = (page) => {
+    const url = getPageUrl(props.pagination, page)
+    emit('page-change', url)
+}
 </script>
 
 <template>
@@ -45,13 +54,14 @@ const getPageUrl = (pagination, page) => {
     <div v-if="pagination.last_page > 1" class="mt-8 flex items-center justify-center">
         <nav class="flex items-center space-x-1 bg-white rounded-lg shadow-sm border border-gray-200 p-1">
             <!-- 前のページ -->
-            <Link v-if="pagination.prev_page_url" 
-                  :href="pagination.prev_page_url"
-                  class="flex items-center justify-center w-10 h-10 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors duration-200 group">
+            <button v-if="pagination.prev_page_url" 
+                    @click="handlePageClick(pagination.prev_page_url)"
+                    type="button"
+                    class="flex items-center justify-center w-10 h-10 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors duration-200 group">
                 <svg class="w-5 h-5 transform group-hover:-translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
-            </Link>
+            </button>
             <span v-else 
                   class="flex items-center justify-center w-10 h-10 text-gray-300 cursor-not-allowed rounded-md">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,10 +71,11 @@ const getPageUrl = (pagination, page) => {
 
             <!-- 最初のページ -->
             <template v-if="pagination.current_page > 3">
-                <Link :href="getPageUrl(pagination, 1)"
-                      class="flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200">
+                <button @click="handlePageNumber(1)"
+                        type="button"
+                        class="flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200">
                     1
-                </Link>
+                </button>
                 <span v-if="pagination.current_page > 4" class="flex items-center justify-center w-8 h-10 text-gray-400">
                     ...
                 </span>
@@ -72,11 +83,12 @@ const getPageUrl = (pagination, page) => {
 
             <!-- 現在ページ周辺のページ番号 -->
             <template v-for="page in getPaginationRange(pagination)" :key="page">
-                <Link v-if="page !== pagination.current_page"
-                      :href="getPageUrl(pagination, page)"
-                      class="flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200">
+                <button v-if="page !== pagination.current_page"
+                        @click="handlePageNumber(page)"
+                        type="button"
+                        class="flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200">
                     {{ page }}
-                </Link>
+                </button>
                 <span v-else
                       class="flex items-center justify-center w-10 h-10 text-sm font-semibold text-white bg-indigo-600 rounded-md">
                     {{ page }}
@@ -88,20 +100,22 @@ const getPageUrl = (pagination, page) => {
                 <span v-if="pagination.current_page < pagination.last_page - 3" class="flex items-center justify-center w-8 h-10 text-gray-400">
                     ...
                 </span>
-                <Link :href="getPageUrl(pagination, pagination.last_page)"
-                      class="flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200">
+                <button @click="handlePageNumber(pagination.last_page)"
+                        type="button"
+                        class="flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all duration-200">
                     {{ pagination.last_page }}
-                </Link>
+                </button>
             </template>
 
             <!-- 次のページ -->
-            <Link v-if="pagination.next_page_url" 
-                  :href="pagination.next_page_url"
-                  class="flex items-center justify-center w-10 h-10 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors duration-200 group">
+            <button v-if="pagination.next_page_url" 
+                    @click="handlePageClick(pagination.next_page_url)"
+                    type="button"
+                    class="flex items-center justify-center w-10 h-10 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors duration-200 group">
                 <svg class="w-5 h-5 transform group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
-            </Link>
+            </button>
             <span v-else 
                   class="flex items-center justify-center w-10 h-10 text-gray-300 cursor-not-allowed rounded-md">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
